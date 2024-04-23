@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Ejercicio1.aspx.cs" Inherits="TP4_GRUPO_3.Ejercicio1" %>
+﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Ejercicio1.aspx.cs" Inherits="TP4_GRUPO_3.Ejercicio1" %>
 
 <!DOCTYPE html>
 
@@ -8,13 +8,13 @@
     <title>Ejercicio 1</title>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="form2" runat="server">
         <div style="margin:1em;">
             <asp:Label ID="Label1" runat="server" Font-Underline="True" Text="DESTINO INICIO"></asp:Label>
             <br />
             <br />
             <asp:Label ID="Label2" runat="server" Text="PROVINCIA: "></asp:Label>
-            <asp:DropDownList ID="DDLInicioProvincias" runat="server" TabIndex="1">
+            <asp:DropDownList ID="DDLInicioProvincias" runat="server" TabIndex="1" AutoPostBack="True" OnSelectedIndexChanged="DDLInicioProvincias_SelectedIndexChanged">
             </asp:DropDownList>
             <br />
             <br />
@@ -28,7 +28,7 @@
             <br />
             <br />
             <asp:Label ID="Label5" runat="server" Text="PROVINCIA: "></asp:Label>
-            <asp:DropDownList ID="DDLFinalProvincias" runat="server" TabIndex="3">
+            <asp:DropDownList ID="DDLFinalProvincias" runat="server" TabIndex="3" AutoPostBack="True" OnSelectedIndexChanged="DDLFinalProvincias_SelectedIndexChanged">
             </asp:DropDownList>
             <br />
             <br />
