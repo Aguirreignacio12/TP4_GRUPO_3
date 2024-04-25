@@ -7,15 +7,15 @@ namespace TP4_GRUPO_3
     public partial class Ejercicio1 : System.Web.UI.Page
     {
         private const string stringConexion = @"Data Source=DESKTOP-2MB1JSO\SQLEXPRESS;Initial Catalog=Viajes;Integrated Security=True";
-        private string consultaProvincias = "SELECT * FROM Provincias";
-        private string consultaLocalidades = "SELECT * FROM Localidades WHERE IdProvincia = ";
+        private readonly string consultaProvincias = "SELECT * FROM Provincias";
+        private  string consultaLocalidades = "SELECT * FROM Localidades WHERE IdProvincia = ";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
 
-                cargarProvincias();
+                CargarProvincias();
 
                 //Asignación de valor inicial a los DDL
                 DDLInicioLocalidades.Items.Insert(0, new ListItem("-- Seleccionar --", ""));
@@ -23,7 +23,7 @@ namespace TP4_GRUPO_3
             }
         }
 
-        private void cargarProvincias()
+        private void CargarProvincias()
         {
             try
             {
