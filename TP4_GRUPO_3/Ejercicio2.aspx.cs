@@ -8,6 +8,7 @@ namespace TP4_GRUPO_3
     {
         private const string stringConnection = @"Data Source=DESKTOP-2MB1JSO\SQLEXPRESS;Initial Catalog=Neptuno;Integrated Security=True";
         private readonly string consultaProductos = "SELECT * FROM Productos";
+        private string consultaIdProductos = "SELECT * FROM Productos WHERE ";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -44,15 +45,59 @@ namespace TP4_GRUPO_3
 
         }
 
-        protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         protected void BtnQuitarFiltro_Click(object sender, EventArgs e)
         {
             LimpiarTxtBox();
             CargarProductos();
+        }
+
+        protected void BtnFiltro_Click(object sender, EventArgs e)
+        {
+            if(!TxtBoxProducto.Text.Equals("") && TxtBoxCategoria.Text.Equals(""))
+            {
+                consultaIdProductos += DDLProducto.SelectedValue + TxtBoxProducto.Text;
+                
+                SqlConnection connection = new SqlConnection(stringConnection);
+                connection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand(consultaIdProductos, connection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                GvProductos.DataSource = sqlDataReader;
+                GvProductos.DataBind();
+
+                connection.Close();
+            }
+            else
+            {
+                if(TxtBoxProducto.Text.Equals("") && !TxtBoxCategoria.Text.Equals(""))
+                {
+                    //Consulta solo por categoria
+                }
+                else
+                {
+                    if(!TxtBoxProducto.Text.Equals("") && !TxtBoxCategoria.Text.Equals(""))
+                    {
+                        consultaIdProductos += DDLProducto.SelectedValue + TxtBoxProducto.Text + " AND " + DDLCategoria.SelectedValue + TxtBoxCategoria.Text;
+
+                        SqlConnection connection = new SqlConnection(stringConnection);
+                        connection.Open();
+
+                        SqlCommand sqlCommand = new SqlCommand(consultaIdProductos, connection);
+                        SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                        GvProductos.DataSource = sqlDataReader;
+                        GvProductos.DataBind();
+
+                        connection.Close();
+                    }
+                    else
+                    {
+                        CargarProductos();
+                    }
+                }
+            }
         }
     }
 }
