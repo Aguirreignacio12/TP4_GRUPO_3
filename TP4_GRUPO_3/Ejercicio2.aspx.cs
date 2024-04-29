@@ -6,7 +6,7 @@ namespace TP4_GRUPO_3
 {
     public partial class Ejercicio2 : System.Web.UI.Page
     {
-        private const string stringConnection = @"Data Source=DESKTOP-2MB1JSO\SQLEXPRESS;Initial Catalog=Neptuno;Integrated Security=True";
+        private const string stringConnection = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=Neptuno;Integrated Security=True";
         private readonly string consultaProductos = "SELECT * FROM Productos";
         private string consultaIdProductos = "SELECT * FROM Productos WHERE ";
         protected void Page_Load(object sender, EventArgs e)
