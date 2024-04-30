@@ -8,13 +8,11 @@ namespace TP4_GRUPO_3
     {
         private const string stringConexion = @"Data Source=DESKTOP-2MB1JSO\SQLEXPRESS;Initial Catalog=Viajes;Integrated Security=True";
         private readonly string consultaProvincias = "SELECT * FROM Provincias";
-        private  string consultaLocalidades = "SELECT * FROM Localidades WHERE IdProvincia = ";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-
                 CargarProvincias();
 
                 //Asignación de valor inicial a los DDL
@@ -34,7 +32,6 @@ namespace TP4_GRUPO_3
                 //Consulta SQL
                 SqlCommand sqlCommand = new SqlCommand(consultaProvincias, connection);
                 SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-
 
                 //asignación de valores a DDLInicio
                 DDLInicioProvincias.DataSource = sqlDataReader;
@@ -59,7 +56,6 @@ namespace TP4_GRUPO_3
                 DDLInicioProvincias.Items.Insert(0, new ListItem("-- Seleccionar --", ""));
                 DDLFinalProvincias.Items.Insert(0, new ListItem("-- Seleccionar --", ""));
 
-
                 connection.Close();
             }
             catch (Exception err)
@@ -72,26 +68,26 @@ namespace TP4_GRUPO_3
         {
             try
             {
-                consultaLocalidades += DDLInicioProvincias.SelectedValue.ToString();
+                string provinciaInicioId = DDLInicioProvincias.SelectedValue;
 
-                //Conexión a la base de datos
-                SqlConnection connection = new SqlConnection(stringConexion);
-                connection.Open();
+                // Carga de datos
+                CargarLocalidades(provinciaInicioId, DDLInicioLocalidades);
 
-                //Consulta SQL
-                SqlCommand sqlCommand = new SqlCommand(consultaLocalidades, connection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                // Habilitar todas las opciones DDL final
+                foreach (ListItem item in DDLFinalProvincias.Items)
+                {
+                    item.Enabled = true;
+                }
 
-                //asignación de valores a DDLInicio
-                DDLInicioLocalidades.DataSource = sqlDataReader;
-                DDLInicioLocalidades.DataTextField = "NombreLocalidad";
-                DDLInicioLocalidades.DataValueField = "IdLocalidad";
-                DDLInicioLocalidades.DataBind();
-
-                //Asignación de valor inicial a los DDL
-                DDLInicioLocalidades.Items.Insert(0, new ListItem("-- Seleccionar --", ""));
-
-                connection.Close();
+                // Deshabilitar la opción seleccionada
+                foreach (ListItem item in DDLFinalProvincias.Items)
+                {
+                    if (item.Value == provinciaInicioId)
+                    {
+                        item.Enabled = false;
+                        break;
+                    }
+                }
             }
             catch (Exception err)
             {
@@ -103,31 +99,49 @@ namespace TP4_GRUPO_3
         {
             try
             {
-                consultaLocalidades += DDLFinalProvincias.SelectedValue.ToString();
-
-                //Conexión a la base de datos
-                SqlConnection connection = new SqlConnection(stringConexion);
-                connection.Open();
-
-                //Consulta SQL
-                SqlCommand sqlCommand = new SqlCommand(consultaLocalidades, connection);
-                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-
-                //asignación de valores a DDLFinal
-                DDLFinalLocalidades.DataSource = sqlDataReader;
-                DDLFinalLocalidades.DataTextField = "NombreLocalidad";
-                DDLFinalLocalidades.DataValueField = "IdLocalidad";
-                DDLFinalLocalidades.DataBind();
-
-                //Asignación de valor inicial a los DDL
-                DDLFinalLocalidades.Items.Insert(0, new ListItem("-- Seleccionar --", ""));
-
-                connection.Close();
+                string provinciaId = DDLFinalProvincias.SelectedValue;
+                CargarLocalidades(provinciaId, DDLFinalLocalidades);
             }
             catch (Exception err)
             {
                 lblError.Text = "Error al cargar Localidades: " + err.Message;
             }
         }
+
+        private void CargarLocalidades(string provinciaId, DropDownList ddlLocalidades)
+        {
+            try
+            {
+                string consultaLocalidades = "SELECT * FROM Localidades WHERE IdProvincia = " + provinciaId;
+
+                //Conexión a la base de datos
+                using (SqlConnection connection = new SqlConnection(stringConexion))
+                {
+                    connection.Open();
+
+                    //Consulta SQL
+                    using (SqlCommand sqlCommand = new SqlCommand(consultaLocalidades, connection))
+                    {
+                        using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                        {
+                            //asignación de valores al DropDownList correspondiente
+                            ddlLocalidades.DataSource = sqlDataReader;
+                            ddlLocalidades.DataTextField = "NombreLocalidad";
+                            ddlLocalidades.DataValueField = "IdLocalidad";
+                            ddlLocalidades.DataBind();
+
+                            //Asignación de valor inicial al DropDownList
+                            ddlLocalidades.Items.Insert(0, new ListItem("-- Seleccionar --", ""));
+                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                lblError.Text = "Error al cargar Localidades: " + err.Message;
+            }
+        }
+
+       
     }
 }
