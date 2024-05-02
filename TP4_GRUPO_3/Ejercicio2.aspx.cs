@@ -54,10 +54,10 @@ namespace TP4_GRUPO_3
 
         protected void BtnFiltro_Click(object sender, EventArgs e)
         {
-            if(!TxtBoxProducto.Text.Equals("") && TxtBoxCategoria.Text.Equals(""))
+            if (!TxtBoxProducto.Text.Equals("") && TxtBoxCategoria.Text.Equals(""))
             {
                 consultaIdProductos += DDLProducto.SelectedValue + TxtBoxProducto.Text;
-                
+
                 SqlConnection connection = new SqlConnection(stringConnection);
                 connection.Open();
 
@@ -71,13 +71,24 @@ namespace TP4_GRUPO_3
             }
             else
             {
-                if(TxtBoxProducto.Text.Equals("") && !TxtBoxCategoria.Text.Equals(""))
+                if (TxtBoxProducto.Text.Equals("") && !TxtBoxCategoria.Text.Equals(""))
                 {
-                    //Consulta solo por categoria
+                    consultaIdProductos += DDLCategoria.SelectedValue + TxtBoxCategoria.Text;
+
+                    SqlConnection connection = new SqlConnection(stringConnection);
+                    connection.Open();
+
+                    SqlCommand sqlCommand = new SqlCommand(consultaIdProductos, connection);
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                    GvProductos.DataSource = sqlDataReader;
+                    GvProductos.DataBind();
+
+                    connection.Close();
                 }
                 else
                 {
-                    if(!TxtBoxProducto.Text.Equals("") && !TxtBoxCategoria.Text.Equals(""))
+                    if (!TxtBoxProducto.Text.Equals("") && !TxtBoxCategoria.Text.Equals(""))
                     {
                         consultaIdProductos += DDLProducto.SelectedValue + TxtBoxProducto.Text + " AND " + DDLCategoria.SelectedValue + TxtBoxCategoria.Text;
 
